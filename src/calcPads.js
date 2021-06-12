@@ -1,40 +1,86 @@
 import { useState } from "react";
-import { Row, Container, Col, Button } from 'react-bootstrap';
+import { Row, Container, Col } from 'react-bootstrap';
 
-const nums = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
-const ops = [ '/', '*', '-', '+'];
-const ids = {
-  7: 'seven', 
-  8: 'eight', 
-  9: 'nine', 
-  4: 'four', 
-  5: 'five', 
-  6: 'six', 
-  1: 'one', 
-  2: 'two', 
-  3: 'three', 
-  0: 'zero',
-  '/': 'divide', 
-  '*': 'multiply', 
-  '-': 'subtract', 
-  '+': 'add'
-}
+const ops = [ '/', '*', '+', '='];
 
 export function Calculator() {
 
     const [formula, setformula] = useState("0");
+    const [lastClicked, setLastClicked] = useState(undefined);
 
     const handleClick = (e) => {
-        
-        if (e.currentTarget.value === "AC") {
-            setformula("0");
-        } else if (formula < "1") {
 
-            setformula(e.currentTarget.value);
-        } else {
-            setformula(formula + e.currentTarget.value);
+        const { innerText } = e.target;
+
+        switch(innerText) {
+            case "AC": {
+                setformula("0");
+                break;
+            }
+
+            case "=": {
+                const length = formula.length - 1;
+                const result = undefined;
+                if (ops.includes(lastClicked)) {
+                    for (let i = length; i >= 0; i--) {
+                        if(!ops.includes(formula[i])) {
+                            result = i + 1;
+                            break;
+                        }
+                    }
+                const preventCrash = formula.slice(0, result);
+                console.log(preventCrash);
+                setformula(preventCrash);
+                }
+
+                const answer = eval(formula);
+                setformula(answer);
+                
+                break;
+            }
+
+            case ".": {
+                const last = formula.slice(-1)[0];
+                
+                if (last !== ".") {
+                    setformula(formula + ".");
+                }
+                break;
+            }
+
+            case "-": {
+                const last = formula.slice(-1)[0];
+
+                if (last !== "-") {
+                    setformula(formula + "-");
+                }
+                
+                break;
+            }
+
+            default: {
+                if (ops.includes(innerText)) {
+                    if (!ops.includes(lastClicked)) {
+                        setformula(formula + innerText);
+                    } else {
+                        const remove = formula.slice(0, -1);
+                        setformula(remove + innerText);
+                    }
+                } else {
+                    if (formula === "0") {
+                        setformula(innerText);
+                    } else {
+                        setformula(formula + innerText);
+                    }
+                }
+
+            }
+
+            
         }
-        console.log(e.currentTarget.value);
+
+        setLastClicked(innerText);
+        console.log(lastClicked);
     };
 
     return (
@@ -43,31 +89,31 @@ export function Calculator() {
             <hr />
         <Container className='calc-container'>
             <Row>
-                <Col><Button value="AC" onClick={handleClick} className="spesh pad wide-boi">AC</Button></Col>
-                <Col><Button value="/" onClick={handleClick} className="operator pad slash">/</Button></Col>
+                <Col><button onClick={handleClick} className="spesh pad wide-boi">AC</button></Col>
+                <Col><button onClick={handleClick} className="operator pad slash">/</button></Col>
             </Row>
             <Row>
-                <Col><Button value="7" onClick={handleClick} className="pad">7</Button></Col>
-                <Col><Button value="8" onClick={handleClick} className="pad">8</Button></Col>
-                <Col><Button value="9" onClick={handleClick} className="pad">9</Button></Col>
-                <Col><Button value="*" onClick={handleClick} className="operator pad">*</Button></Col>
+                <Col><button onClick={handleClick} className="pad">7</button></Col>
+                <Col><button onClick={handleClick} className="pad">8</button></Col>
+                <Col><button onClick={handleClick} className="pad">9</button></Col>
+                <Col><button onClick={handleClick} className="operator pad">*</button></Col>
             </Row>
             <Row>
-                <Col><Button value="4" onClick={handleClick} className="pad">4</Button></Col>
-                <Col><Button value="5" onClick={handleClick} className="pad">5</Button></Col>
-                <Col><Button value="6" onClick={handleClick} className="pad">6</Button></Col>
-                <Col><Button value="-" onClick={handleClick} className="operator pad">-</Button></Col>
+                <Col><button onClick={handleClick} className="pad">4</button></Col>
+                <Col><button onClick={handleClick} className="pad">5</button></Col>
+                <Col><button onClick={handleClick} className="pad">6</button></Col>
+                <Col><button onClick={handleClick} className="operator pad">-</button></Col>
             </Row>
             <Row>
-                <Col><Button value="1" onClick={handleClick} className="pad">1</Button></Col>
-                <Col><Button value="2" onClick={handleClick} className="pad">2</Button></Col>
-                <Col><Button value="3" onClick={handleClick} className="pad">3</Button></Col>
-                <Col><Button value="+" onClick={handleClick} className="operator pad">+</Button></Col>
+                <Col><button onClick={handleClick} className="pad">1</button></Col>
+                <Col><button onClick={handleClick} className="pad">2</button></Col>
+                <Col><button onClick={handleClick} className="pad">3</button></Col>
+                <Col><button onClick={handleClick} className="operator pad">+</button></Col>
             </Row>
             <Row>
-            <Col><Button value="0" onClick={handleClick} className="pad wide-boi zero">0</Button></Col>
-            <Col><Button value="." onClick={handleClick} className="spesh pad decimal">.</Button></Col>
-            <Col><Button value="=" onClick={handleClick} className="operator pad equals">=</Button></Col>
+            <Col><button onClick={handleClick} className="pad wide-boi zero">0</button></Col>
+            <Col><button onClick={handleClick} className="spesh pad decimal">.</button></Col>
+            <Col><button onClick={handleClick} className="operator pad equals">=</button></Col>
             </Row>
         </Container>
         </div>
