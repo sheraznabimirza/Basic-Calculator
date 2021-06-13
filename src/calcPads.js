@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Row, Container, Col } from "react-bootstrap";
 
-const ops = ["/", "*", "+", "-", "="];
+const ops = ["/", "*", "+", "-"];
 
 export function Calculator() {
   const [formula, setformula] = useState("0");
