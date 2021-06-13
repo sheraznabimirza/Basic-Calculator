@@ -9,14 +9,7 @@ export function Calculator() {
 
   const lastOperator = () => {
     const length = formula.length - 1;
-    let result = undefined;
-    for (let i = length; i >= 0; i--) {
-      if (!ops.includes(formula[i])) {
-        result = i + 1;
-        break;
-      }
-    }
-    const preventCrash = formula.slice(0, result);
+    const preventCrash = formula.slice(0, length);
     const alt = eval(preventCrash);
     return alt;
   };
